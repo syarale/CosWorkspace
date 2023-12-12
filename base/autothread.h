@@ -3,8 +3,8 @@
  *  the join()/detach() when the object is destructed.
  */
 
-#ifndef base_AutoThread_H_
-#define base_AutoThread_H_
+#ifndef BASE_AUTOTHREAD_H_
+#define BASE_AUTOTHREAD_H_
 #include <iostream>
 #include <thread>
 
@@ -59,4 +59,4 @@ class AutoThread<detach> {
 } // namespace base
 } // namespace cos
 
-#endif  // base_AutoThread_H_
+#endif  // BASE_AUTOTHREAD_H_

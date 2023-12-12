@@ -2,8 +2,8 @@
  * A simple thread safe queue
  */
 
-#ifndef base_THREAD_SAFE_QUEUE_
-#define base_THREAD_SAFE_QUEUE_
+#ifndef BASE_THREAD_SAFE_QUEUE_
+#define BASE_THREAD_SAFE_QUEUE_
 
 #include <deque>
 #include <mutex>
@@ -71,4 +71,4 @@ class ThreadSafeQueue {
 
 
 
-#endif // base_THREAD_SAFE_QUEUE_
+#endif // BASE_THREAD_SAFE_QUEUE_
