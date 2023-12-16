@@ -3,8 +3,8 @@
  *  the join()/detach() when the object is destructed.
  */
 
-#ifndef base_AutoThread_H_
-#define base_AutoThread_H_
+#ifndef BASE_AUTOTHREAD_H_
+#define BASE_AUTOTHREAD_H_
 #include <iostream>
 #include <thread>
 
@@ -24,7 +24,7 @@ template <>
 class AutoThread<join> {
  public:
   AutoThread(std::thread&& t) : thread_(std::move(t)) { }
-  AutoThread(AutoThread&) = delete;
+  AutoThread(const AutoThread&) = delete;
   AutoThread& operator= (const AutoThread&) = delete;
   AutoThread(AutoThread&& thrd) = default;
 
@@ -42,7 +42,7 @@ template <>
 class AutoThread<detach> {
  public:
   explicit AutoThread(std::thread&& t) : thread_(std::move(t)) { }
-  AutoThread(AutoThread&) = delete;
+  AutoThread(const AutoThread&) = delete;
   AutoThread& operator= (const AutoThread&) = delete;
   explicit AutoThread(AutoThread&& thrd) = default;
 
@@ -59,4 +59,4 @@ class AutoThread<detach> {
 } // namespace base
 } // namespace cos
 
-#endif  // base_AutoThread_H_
+#endif  // BASE_AUTOTHREAD_H_
