@@ -24,7 +24,7 @@ template <>
 class AutoThread<join> {
  public:
   AutoThread(std::thread&& t) : thread_(std::move(t)) { }
-  AutoThread(AutoThread&) = delete;
+  AutoThread(const AutoThread&) = delete;
   AutoThread& operator= (const AutoThread&) = delete;
   AutoThread(AutoThread&& thrd) = default;
 
@@ -42,7 +42,7 @@ template <>
 class AutoThread<detach> {
  public:
   explicit AutoThread(std::thread&& t) : thread_(std::move(t)) { }
-  AutoThread(AutoThread&) = delete;
+  AutoThread(const AutoThread&) = delete;
   AutoThread& operator= (const AutoThread&) = delete;
   explicit AutoThread(AutoThread&& thrd) = default;
 

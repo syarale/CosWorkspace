@@ -14,7 +14,7 @@ template <typename F, typename... Args>
 using result_of_t = std::invoke_result_t<F, Args...>;
 #else
 template <typename F, typename...Args>
-using result_of_t = std::result_of_t<F, Args...>;
+using result_of_t = typename std::result_of<F(Args...)>::type;
 #endif
 
 

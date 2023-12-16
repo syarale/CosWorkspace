@@ -1,6 +1,7 @@
 #ifndef WORKSPACE_WORKBRANCH_H_
 #define WORKSPACE_WORKBRANCH_H_
 
+#include <assert.h>
 #include <condition_variable>
 #include <future>
 #include <mutex>
@@ -80,12 +81,12 @@ class WorkBranch {
   // Submit 'normal' task, and return std::future<R>
   template <typename T = base::normal, typename F,
             typename R = base::result_of_t<F>,
-            typename DR = typename std::enable_if<!std::is_void<R>::type>>
+            typename DR = typename std::enable_if<!std::is_void<R>::value>::type>
   auto Submit(F&& task) -> typename std::enable_if<std::is_same<T, base::normal>::value, std::future<R>>::type {
     std::function<R()> exec(std::forward<F>(task));
-    std::shared_ptr<std::promise<R>> task_promise = std::make_shared<std::promise<R>>()
+    std::shared_ptr<std::promise<R>> task_promise = std::make_shared<std::promise<R>>();
     tasks_que_.push_back([exec, task_promise] {
-      task_promise->set_value(exec);
+      task_promise->set_value(exec());
     });
     return task_promise->get_future();
   }
@@ -98,7 +99,7 @@ class WorkBranch {
     std::function<R()> exec(std::forward<F>(task));
     std::shared_ptr<std::promise<R>> task_promise = std::make_shared<std::promise<R>>();
     tasks_que_.push_front([exec, task_promise] {
-      task_promise->set_value(exec);
+      task_promise->set_value(exec());
     });
     return task_promise->get_future();
   }
@@ -109,7 +110,7 @@ class WorkBranch {
             typename DR = typename std::enable_if<std::is_void<R>::value>::type>
   auto Submit(F&& task, Fs&&... tasks) -> typename std::enable_if<std::is_same<T, base::sequence>::value>::type {
     tasks_que_.push_back([=] {
-      recursive_exec(task, tasks);
+      recursive_exec(task, tasks...);
     });
   }
 
@@ -117,6 +118,7 @@ class WorkBranch {
     std::unique_lock<std::mutex> ulk(mtx_);
     is_waiting_ = true;
     waiting_cv_.wait(ulk, [this] { return tasks_done_ >= workers_map_.size();});
+    assert(tasks_done_ >= workers_map_.size());
     
     is_waiting_ = false;
     tasks_done_ = 0;
@@ -147,7 +149,6 @@ class WorkBranch {
           }
 
           if (is_waiting_) {
-            tasks_done_ ++;
             waiting_cv_.notify_one();
           }
           return;
@@ -177,7 +178,7 @@ class WorkBranch {
   template <typename F, typename... Fs>
   void recursive_exec(F&& task, Fs&&... tasks) {
     task();
-    recursive_exec(tasks);
+    recursive_exec(std::forward<Fs>(tasks)...);
   }
 
 
