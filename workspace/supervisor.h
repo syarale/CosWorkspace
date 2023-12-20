@@ -98,7 +98,7 @@ class Supervisor {
   // before the Supervisor
   std::vector<WorkBranch*> branches_vec_;
 
-  CallbackFunc tick_callback_;
+  CallbackFunc tick_callback_ = ([]{});
   bool is_stop_ = false;
 
   std::size_t min_workers_num_;

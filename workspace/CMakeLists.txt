@@ -6,3 +6,6 @@ target_link_libraries(workbranch_test pthread ${GTEST_BOTH_LIBRARIES})
 
 add_executable(supervisor_test supervisor_test.cpp)
 target_link_libraries(supervisor_test pthread ${GTEST_BOTH_LIBRARIES})
+
+add_executable(workspace_test workspace_test.cpp)
+target_link_libraries(workspace_test pthread ${GTEST_BOTH_LIBRARIES})
